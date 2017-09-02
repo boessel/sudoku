@@ -1,20 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import SudokuElement from './Element.component';
+import Element from './Element.component';
 import './Line.css';
 
-const SudokuLine = ({ line }) => (
+const Line = ({ line, onChange }) => (
   <div className="sudoku_line">
-    { line.map((element, index) => <SudokuElement {...element} key={index} />) }
+    { line.map((element, index) =>
+      <Element {...element} key={index} onChange={onChange(index)} />)}
   </div>
 );
 
-SudokuLine.propTypes = {
+Line.propTypes = {
   line: PropTypes.arrayOf(PropTypes.shape({
     value: PropTypes.number.isRequired,
     status: PropTypes.string,
     disabled: PropTypes.boolean,
   })).isRequired,
+  onChange: PropTypes.func.isRequired,
 };
 
-export default SudokuLine;
+export default Line;

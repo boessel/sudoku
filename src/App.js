@@ -1,6 +1,5 @@
 import React from 'react';
-import SudokuGrid from './component/sudoku/Grid.component';
-import SudokuService from './SudokuService';
+import SudokuGrid from './containers/SudokuGrid.component';
 import './App.css';
 
 const App = () => (
@@ -10,7 +9,7 @@ const App = () => (
     </div>
     <div className="App-intro">
       <h2>Make your grid</h2>
-      <SudokuGrid grid={SudokuService.getVoidGrid()} />
+      <SudokuGrid />
     </div>
   </div>
 );
