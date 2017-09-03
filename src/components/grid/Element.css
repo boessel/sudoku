@@ -3,12 +3,22 @@
   height: 2rem;
   border: solid 1px black;
   text-align: center;
-  display: inline-block;
+  display: block;
   padding: 0;
   margin: 0;
 }
 
 .sudoku_element.disabled {
   background-color: grey;
+  font-weight: bold;
+}
+
+.sudoku_element.define {
+  background-color: orange;
+  font-weight: bold;
+}
+
+.sudoku_element.duplicate {
+  background-color: red;
   font-weight: bold;
 }

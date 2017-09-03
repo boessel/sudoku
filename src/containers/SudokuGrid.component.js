@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
 import Grid from '../components/grid/Grid.component';
+import ImmutableService from '../services/ImmutableService';
 
 const mapStateToProps = function mapStateToProps({ sudoku }) {
   return {
@@ -11,15 +12,11 @@ const mapDispatchToProps = function mapDispatchToProps(dispatch) {
   return {
     onChange: function line(x) {
       return function column(y) {
-        return function element(e) {
-          console.log(e, this);
+        return function element(event) {
+          const value = ImmutableService.getOneDigitInteger(event.target.value);
           return dispatch({
-            x,
-            y,
             type: 'CHANGE_GRID_ELEMENT',
-            newValues: {
-              value: 0,
-            },
+            newValues: { value, x, y },
           });
         };
       };

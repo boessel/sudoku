@@ -1,15 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Line from './Line.component';
+import Column from './Column.component';
 import SquareMatrixPropType from '../../typeChecker/SquareMatrix';
 
-const Grid = ({ grid, onChange }) => {
-  return (
-    <div>
-      {grid.map((line, index) => <Line key={index} line={line} onChange={onChange(index)} />)}
-    </div>
-  )
-};
+const Grid = ({ grid, onChange }) => (
+  <div>
+    {grid.map((column, index) => <Column key={index} column={column} onChange={onChange(index)} />)}
+  </div>
+);
 
 Grid.propTypes = {
   grid: SquareMatrixPropType(9).isRequired,
