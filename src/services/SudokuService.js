@@ -1,58 +1,50 @@
 const getSubgridPosition = position => Math.floor(position / 3);
 const getSubgridIndex = (x, y) => (getSubgridPosition(x) * 3) + getSubgridPosition(y);
-const extractColumnsAndSubgrids = (grid) => {
-  const columns = [];
-  const subgrids = [];
-  grid.forEach((row) => {
-    row.forEach((element) => {
-      const data = { ...element };
-      const subgridIndex = getSubgridIndex(element.x, element.y);
-      if (!Array.isArray(columns[element.y])) {
-        columns[element.y] = [];
-      }
-      if (!Array.isArray(subgrids[subgridIndex])) {
-        subgrids[subgridIndex] = [];
-      }
-      columns[element.y].push(data);
-      subgrids[subgridIndex].push(data);
-    });
-  });
-  return { columns, subgrids };
-};
 
-const getDuplicatedValues = function getDuplicatedValues(array) {
-  const duplicateValue = {};
+const getDuplicatedValues = function duplicationChecker(array) {
+  const duplicateValues = {};
   let previous = { value: 0 };
   array.slice().sort((a, b) => a.value > b.value).forEach((current) => {
     if (Number(current.value) !== 0 && current.value === previous.value) {
-      Object.assign(duplicateValue, { [`${current.x}-${current.y}`]: current });
-      Object.assign(duplicateValue, { [`${previous.x}-${previous.y}`]: previous });
+      Object.assign(duplicateValues, { [`${current.x}-${current.y}`]: current });
+      Object.assign(duplicateValues, { [`${previous.x}-${previous.y}`]: previous });
     }
     previous = current;
   });
-  return duplicateValue;
+
+  return duplicateValues;
+};
+
+const getDuplication = function getDuplication() {
+  let previousDuplicateValues = {};
+  return function getGridDuplication(grid) {
+    const duplicateValues = {};
+    const addToDuplicate = (i, filter) => (
+      Object.assign(duplicateValues, getDuplicatedValues(grid.filter(filter)))
+    );
+    for (let i = 0; i < 9; i += 1) {
+      addToDuplicate(i, element => element.x === i);
+      addToDuplicate(i, element => element.y === i);
+      addToDuplicate(i, element => getSubgridIndex(element.x, element.y) === i);
+    }
+    const output = { current: duplicateValues, previous: previousDuplicateValues };
+    previousDuplicateValues = duplicateValues;
+
+    return output;
+  };
 };
 
 const SudokuService = {
   getVoidGrid(size = 9, value = 0) {
-    const grid = [...Array(size)];
-    return grid.map((v, x) => {
-      const row = [...Array(size)];
-      const disabled = false;
-      return row.map((val, y) =>
-        ({ value: 0, disabled, status: this.getStatusFromValue(value), x, y }));
-    });
+    const grid = [];
+    for (let x = 0; x < size; x += 1) {
+      for (let y = 0; y < size; y += 1) {
+        grid.push({ value, x, y, status: 'void' });
+      }
+    }
+    return grid;
   },
-  getDuplication(grid) {
-    const duplicateValue = {};
-    const { columns, subgrids } = extractColumnsAndSubgrids(grid);
-    [grid, columns, subgrids].forEach((blocks) => {
-      blocks.forEach((block) => {
-        Object.assign(duplicateValue, getDuplicatedValues(block));
-      });
-    });
-    return duplicateValue;
-  },
+  getDuplication: getDuplication(),
   getStatusFromValue(val) {
     if (val === 0) {
       return 'default';

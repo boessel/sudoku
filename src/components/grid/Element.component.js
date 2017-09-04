@@ -2,14 +2,26 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './Element.css';
 
-const Element = ({ value, disabled, status, onChange, x, y }) => {
-  this.onChange = onChange.bind(this);
-  this.value = value === 0 ? '' : value;
-  if (disabled) {
-    return <div className={`sudoku_element ${status} disabled`} value={this.value} />;
+class Element extends React.Component {
+  constructor(props) {
+    super(props);
+    this.onChange = props.onChange.bind(this);
+    this.element = { x: props.x, y: props.y, status: props.status };
   }
-  return <input className={`sudoku_element ${status}`} onChange={onChange} value={this.value} placeholder={x + '-' + y} />;
-};
+
+  render() {
+    const classes = `sudoku_element ${this.props.status}`;
+    if (this.props.status === 'disabled') {
+      return <div className={`${classes} disabled`} value={this.props.value} />;
+    }
+    return (<input
+      className={classes}
+      onChange={this.onChange}
+      value={this.props.value}
+      placeholder={`${this.props.x}-${this.props.y}`}
+    />);
+  }
+}
 
 Element.defaultProps = {
   disabled: false,
@@ -18,9 +30,10 @@ Element.defaultProps = {
 };
 
 Element.propTypes = {
-  value: PropTypes.number.isRequired,
-  status: PropTypes.string,
-  disabled: PropTypes.bool,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  status: PropTypes.string.isRequired,
+  x: PropTypes.number.isRequired,
+  y: PropTypes.number.isRequired,
   onChange: PropTypes.func,
 };
 

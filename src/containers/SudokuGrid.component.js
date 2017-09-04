@@ -10,16 +10,15 @@ const mapStateToProps = function mapStateToProps({ sudoku }) {
 
 const mapDispatchToProps = function mapDispatchToProps(dispatch) {
   return {
-    onChange: function line(x) {
-      return function column(y) {
-        return function element(event) {
-          const value = ImmutableService.getOneDigitInteger(event.target.value);
-          return dispatch({
-            type: 'CHANGE_GRID_ELEMENT',
-            newValues: { value, x, y },
-          });
-        };
-      };
+    onChange(event) {
+      const value = ImmutableService.getOneDigitInteger(event.target.value);
+      return dispatch({
+        type: 'CHANGE_GRID_ELEMENT',
+        payload: {
+          values: { value },
+          element: { ...this.element },
+        },
+      });
     },
   };
 };
